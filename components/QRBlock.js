@@ -3,23 +3,20 @@ import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
 import Colors from '../Colors';
 import Quicksand from '../Quicksand'
 import QRCode from 'react-native-qrcode-svg';
-
-const styles = StyleSheet.create({
-});
-
-const platform_icons = {
-  Email: require('../images/Email.png'),
-  Facebook: require('../images/Facebook.png'),
-  GitHub: require('../images/GitHub.png'),
-  Instagram: require('../images/Instagram.png'),
-  LinkedIn: require('../images/LinkedIn.png'),
-  Telephone: require('../images/Telephone.png'),
-  Twitter: require('../images/Twitter.png'),
-  Website: require('../images/Website.png'),
-};
+import platform_icons from '../platform_icons'
 
 const QRBlock = ({ id, target, platform, handle }) => {
   var { height, width } = Dimensions.get('window');
+  var qrSquareSize = 0
+  if (width < 700) { // width suggests mobile screen
+    qrSquareSize = width - 20.0
+  } else if (width < 800) { // width suggests smaller iPad screen
+    qrSquareSize = width / 2 - 20.0
+  } else if (width < 1100) { // width suggests larger iPad screen in portrait
+    qrSquareSize = width / 3 - 20.0
+  } else { // width suggests larger iPad screen in landscape
+    qrSquareSize = width / 4 - 20.0
+  }
 
   return (
     <View>
@@ -34,7 +31,7 @@ const QRBlock = ({ id, target, platform, handle }) => {
         <QRCode
           style={{ padding: 10 }}
           value={target}
-          size={width - 20}
+          size={qrSquareSize}
           color={Colors.white}
           backgroundColor={Colors.blue}
         />

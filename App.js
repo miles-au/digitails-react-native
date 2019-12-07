@@ -14,7 +14,8 @@ const MainNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: "Home",
+    headerLayoutPreset: 'center'
   }
 );
 

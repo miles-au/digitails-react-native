@@ -3,6 +3,8 @@ import { SafeAreaView, View, FlatList, StyleSheet, Text, Button } from 'react-na
 import Colors from './Colors'
 import Quicksand from './Quicksand'
 import QRBlock from './components/QRBlock';
+import LogoTitle from './LogoTitle'
+import Icon from 'react-native-vector-icons/Entypo';
 
 const DATA = [
   {
@@ -85,18 +87,45 @@ class HomeScreen extends React.Component {
     this.state = {}
   }
 
-  static navigationOptions = {
-    title: 'Digitails',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: <LogoTitle />,
+      headerLeft: (
+        <View style={{ paddingLeft: 15 }}>
+          <Icon.Button
+            name="shuffle"
+            size={25}
+            backgroundColor={Colors.blue}
+            color={Colors.white}
+          // onPress={() => navigation.navigate('AddQRBlock')}
+          ></Icon.Button>
+        </View>
+      ),
+      headerRight: (
+        <View>
+          <Icon.Button
+            name="plus"
+            size={30}
+            backgroundColor={Colors.blue}
+            color={Colors.white}
+            style={{ textAlign: "right" }}
+            onPress={() => navigation.navigate('AddQRBlock')}
+          ></Icon.Button>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: Colors.blue
+      },
+      headerTitleStyle: {
+        fontSize: 30,
+        fontFamily: 'Quicksand-Bold'
+      }
+    }
   };
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Button
-          title="+"
-          onPress={() => navigate('AddQRBlock')}
-        />
         <SafeAreaView>
           <FlatList
             data={DATA}
