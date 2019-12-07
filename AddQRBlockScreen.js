@@ -11,7 +11,8 @@ class AddQRBlockScreen extends React.Component {
     super()
     this.state = {
       selectedPlatform: "",
-      fieldType: "URL/Target"
+      fieldType: "URL/Target",
+      target: ""
     }
   }
 
@@ -72,7 +73,20 @@ class AddQRBlockScreen extends React.Component {
         </View>
         <Text style={[{ padding: 5, color: Colors.white, fontSize: 25 }, Quicksand.semibold]}>{`${this.state.fieldType}:`}</Text>
         <TextInput style={{ backgroundColor: Colors.white, width: width - 20, alignSelf: "center", marginTop: 5, marginBottom: 5 }}></TextInput>
-      </ScrollView>
+        <TouchableNativeFeedback
+          onPress={() => {
+            this.props.navigation.navigate('Home', {
+              addPlatform: this.state.selectedPlatform,
+              addTarget: this.state.target
+            });
+          }}
+          // onPress={this._onPressButton}
+          background={TouchableNativeFeedback.Ripple()}>
+          <View style={{ width: width - 20, backgroundColor: Colors.white, padding: 10, margin: 5 }}>
+            <Text style={{ fontSize: 20, color: Colors.blue, alignSelf: "center" }}>Add QR Code</Text>
+          </View>
+        </TouchableNativeFeedback>
+      </ScrollView >
     );
   }
 }

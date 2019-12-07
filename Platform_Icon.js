@@ -7,7 +7,7 @@ const Platform_Icon = ({ selectedPlatform, platform }) => {
   var { height, width } = Dimensions.get('window');
   var border = 0
   if (selectedPlatform == platform) {
-    border = 2
+    border = 3
   }
   return (
     <View style={{ padding: 5 }}>

@@ -5,86 +5,45 @@ import Quicksand from './Quicksand'
 import QRBlock from './components/QRBlock';
 import LogoTitle from './LogoTitle'
 import Icon from 'react-native-vector-icons/Entypo';
-
-const DATA = [
-  {
-    id: '1',
-    platform: 'Telephone',
-    target: '778-801-9205',
-    handle: 'mobile',
-  },
-  {
-    id: '2',
-    platform: 'Instagram',
-    target: 'https://www.instagram.com/airmilesss',
-    handle: 'airmilesss',
-  },
-  {
-    id: '3',
-    platform: 'Facebook',
-    target: 'https://www.facebook.com/miles.au',
-    handle: 'miles.au',
-  },
-  {
-    id: '4',
-    platform: 'Telephone',
-    target: '778-801-9205',
-    handle: 'mobile',
-  },
-  {
-    id: '5',
-    platform: 'Instagram',
-    target: 'https://www.instagram.com/airmilesss',
-    handle: 'airmilesss',
-  },
-  {
-    id: '6',
-    platform: 'Facebook',
-    target: 'https://www.facebook.com/miles.au',
-    handle: 'miles.au',
-  },
-  {
-    id: '7',
-    platform: 'Telephone',
-    target: '778-801-9205',
-    handle: 'mobile',
-  },
-  {
-    id: '8',
-    platform: 'Instagram',
-    target: 'https://www.instagram.com/airmilesss',
-    handle: 'airmilesss',
-  },
-  {
-    id: '9',
-    platform: 'Facebook',
-    target: 'https://www.facebook.com/miles.au',
-    handle: 'miles.au',
-  },
-  {
-    id: '10',
-    platform: 'Telephone',
-    target: '778-801-9205',
-    handle: 'mobile',
-  },
-  {
-    id: '11',
-    platform: 'Instagram',
-    target: 'https://www.instagram.com/airmilesss',
-    handle: 'airmilesss',
-  },
-  {
-    id: '12',
-    platform: 'Facebook',
-    target: 'https://www.facebook.com/miles.au',
-    handle: 'miles.au',
-  },
-];
+import { DraggableGrid } from 'react-native-draggable-grid';
 
 class HomeScreen extends React.Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      isShuffling: false,
+      data: [
+        { id: '1', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
+        { id: '2', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
+        { id: '3', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
+        { id: '4', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
+        { id: '5', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
+        { id: '6', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
+        { id: '7', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
+        { id: '8', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
+        { id: '9', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
+      ],
+    }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ shuffleFunction: this.switchShuffling });
+  }
+
+  switchShuffling = () => {
+    this.setState({ isShuffling: !this.state.isShuffling })
+  }
+
+  render_item(item) {
+    return (
+      <QRBlock
+        id={item.id}
+        target={item.target}
+        platform={item.platform}
+        handle={item.handle}
+        isShuffling={this.state.isShuffling}
+      />
+    );
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -97,7 +56,7 @@ class HomeScreen extends React.Component {
             size={25}
             backgroundColor={Colors.blue}
             color={Colors.white}
-          // onPress={() => navigation.navigate('AddQRBlock')}
+            onPress={navigation.getParam('shuffleFunction')}
           ></Icon.Button>
         </View>
       ),
@@ -127,7 +86,12 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <SafeAreaView>
-          <FlatList
+          <DraggableGrid
+            numColumns={1}
+            data={this.state.data}
+            renderItem={this.render_item}
+          />
+          {/* <FlatList
             data={DATA}
             renderItem={({ item }) => (
               <QRBlock
@@ -135,10 +99,11 @@ class HomeScreen extends React.Component {
                 target={item.target}
                 platform={item.platform}
                 handle={item.handle}
+                isShuffling={this.state.isShuffling}
               />
             )}
             keyExtractor={item => item.id}
-          />
+          /> */}
         </SafeAreaView>
       </View>
     )

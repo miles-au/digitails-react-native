@@ -5,9 +5,9 @@ import Quicksand from '../Quicksand'
 import QRCode from 'react-native-qrcode-svg';
 import platform_icons from '../platform_icons'
 
-const QRBlock = ({ id, target, platform, handle }) => {
+const QRBlock = ({ id, target, platform, handle, isShuffling }) => {
   var { height, width } = Dimensions.get('window');
-  var qrSquareSize = 0
+  var qrSquareSize = 0;
   if (width < 700) { // width suggests mobile screen
     qrSquareSize = width - 20.0
   } else if (width < 800) { // width suggests smaller iPad screen
@@ -17,6 +17,12 @@ const QRBlock = ({ id, target, platform, handle }) => {
   } else { // width suggests larger iPad screen in landscape
     qrSquareSize = width / 4 - 20.0
   }
+  var titleText = platform;
+  var displayed = "flex"
+  if (isShuffling) {
+    titleText = handle
+    displayed = "none"
+  }
 
   return (
     <View>
@@ -25,9 +31,9 @@ const QRBlock = ({ id, target, platform, handle }) => {
           style={{ width: 50, height: 50, marginRight: 10 }}
           source={platform_icons[platform]}
         />
-        <Text style={[{ fontSize: 25, color: Colors.white }, Quicksand.bold]} >{platform}</Text>
+        <Text style={[{ fontSize: 25, color: Colors.white }, Quicksand.bold]} >{titleText}</Text>
       </View>
-      <View style={{ width: width, paddingLeft: 10 }}>
+      <View style={{ width: width, paddingLeft: 10, display: displayed }}>
         <QRCode
           style={{ padding: 10 }}
           value={target}
@@ -36,7 +42,7 @@ const QRBlock = ({ id, target, platform, handle }) => {
           backgroundColor={Colors.blue}
         />
       </View>
-      <Text style={[{ fontSize: 25, color: Colors.white, width: "100%", textAlign: "center" }, Quicksand.regular]} >{handle}</Text>
+      <Text style={[{ fontSize: 25, color: Colors.white, width: "100%", textAlign: "center", display: displayed }, Quicksand.regular]} >{handle}</Text>
     </View>
   )
 }
