@@ -14,33 +14,97 @@ class ShuffleListScreen extends React.Component {
     super()
 
     this.state = {
-      data: [
-        { id: '1', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
-        { id: '2', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
-        { id: '3', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
-        { id: '4', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
-        { id: '5', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
-        { id: '6', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
-        { id: '7', platform: 'Telephone', target: '778-801-9205', handle: 'mobile', },
-        { id: '8', platform: 'Instagram', target: 'https://www.instagram.com/airmilesss', handle: 'airmilesss', },
-        { id: '9', platform: 'Facebook', target: 'https://www.facebook.com/miles.au', handle: 'miles.au', },
-      ],
+      data: [],
+      blockOrder: []
     }
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ shuffleFunction: this.switchShuffling });
+    console.log("mount")
+    this.props.navigation.setParams({ submitList: this.submitList });
+    this.updateData();
   }
 
-  static navigationOptions = {
-    title: 'Shuffle/Edit',
-    headerStyle: {
-      backgroundColor: Colors.blue
-    },
-    headerTintColor: Colors.white,
-    headerTitleStyle: {
-      fontSize: 30,
-      fontFamily: 'Quicksand-Bold'
+  updateData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@qrBlocks')
+      const parsed_value = JSON.parse(value)
+      if (value != null) {
+        this.props.navigation.setParams({ data: parsed_value })
+        this.setState({ data: parsed_value })
+      } else {
+        this.props.navigation.setParams({ data: [] })
+      }
+    } catch (e) {
+    }
+  }
+
+  deletePressed = (id) => {
+    var currentData = this.state.data;
+    currentData.splice(id, 1);
+    this.setState({ data: currentData })
+  }
+
+  submitList = (navigation) => {
+    var finalData = this.state.data;
+    if (this.state.blockOrder.length > 0) {
+      finalData = this.getOrderedData();
+    }
+    console.log("submit")
+    setValue = async () => {
+      try {
+        await AsyncStorage.setItem('@qrBlocks', JSON.stringify(finalData))
+      } catch (e) {
+        // save error
+      }
+      console.log('Done.')
+    }
+    setValue();
+    navigation.navigate('Home')
+  }
+
+  getOrderedData = () => {
+    const currentData = this.state.data
+    const updatedData = this.state.blockOrder.map(({ key }) => {
+      return (currentData[key])
+    })
+    return updatedData
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      headerTitle: <LogoTitle title="Add QR code" />,
+      headerLeft: (
+        <View style={{ paddingLeft: 15 }}>
+          <Icon.Button
+            name="cross"
+            size={30}
+            backgroundColor={Colors.blue}
+            color={Colors.white}
+            onPress={() => navigation.navigate('Home')}
+          ></Icon.Button>
+        </View>
+      ),
+      headerRight: (
+        <View>
+          <Icon.Button
+            name="check"
+            size={25}
+            backgroundColor={Colors.blue}
+            color={Colors.white}
+            style={{ textAlign: "right" }}
+            onPress={() => params.submitList(navigation)}
+          ></Icon.Button>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: Colors.blue
+      },
+      headerTitleStyle: {
+        fontSize: 30,
+        fontFamily: 'Quicksand-Bold'
+      }
     }
   };
 
@@ -66,18 +130,23 @@ class ShuffleListScreen extends React.Component {
               itemHeight={60}
               itemWidth={qrSquareWidth}
               dragActivationThreshold={200}
-              onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
-              onDragStart={() => console.log("Some block is being dragged now!")} >
+              onDragRelease={({ itemOrder }) => {
+                console.log("itemOrder: ", itemOrder)
+                this.setState({ blockOrder: itemOrder })
+              }}
+              onDragStart={() => console.log("Some block is being dragged now!")}
+            >
               {
-                this.state.data.map(({ id, target, platform, handle }) => {
+                this.state.data.map(({ target, platform, handle }, index) => {
+                  console.log("handle: ", handle)
                   return (
                     <QRBlockEdit
-                      key={id}
-                      id={id}
+                      key={index}
+                      id={index}
                       platform={platform}
                       handle={handle}
                       qrSquareWidth={qrSquareWidth}
-                      isShuffling={this.state.isShuffling}
+                      deletePressed={this.deletePressed}
                     />
                   )
                 })
@@ -85,7 +154,7 @@ class ShuffleListScreen extends React.Component {
             </SortableGrid>
           </ScrollView>
         </SafeAreaView>
-      </View>
+      </View >
     )
   }
 }

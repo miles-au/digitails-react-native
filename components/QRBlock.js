@@ -9,7 +9,7 @@ const QRBlock = ({ target, platform, handle, qrSquareWidth }) => {
   var titleText = platform;
 
   return (
-    <View style={{ height: qrSquareWidth + 90 }}>
+    <View style={{ height: qrSquareWidth + 90, paddingTop: 5 }}>
       <View style={{ flex: 1, flexDirection: 'row', padding: 10, alignItems: 'center', width: "100%" }}>
         <Image
           style={{ width: 50, height: 50, marginRight: 10 }}

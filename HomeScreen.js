@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, Button, Dimensions } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, Button, TouchableNativeFeedback, Linking, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Colors from './Colors'
 import Quicksand from './Quicksand'
@@ -35,6 +35,10 @@ class HomeScreen extends React.Component {
     } catch (e) {
     }
   }
+
+  openMilesPage = () => {
+    Linking.openURL("https://milesau.com").catch(err => console.error("Couldn't load page", err));
+  };
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -94,34 +98,45 @@ class HomeScreen extends React.Component {
         // onWillBlur={payload => console.log('will blur', payload)}
         // onDidBlur={payload => console.log('did blur', payload)}
         />
-        <SafeAreaView>
-          <ScrollView style={{ paddingBottom: 50 }}>
-            <SortableGrid
-              blockTransitionDuration={400}
-              activeBlockCenteringDuration={200}
-              itemHeight={qrSquareWidth + 90}
-              itemWidth={qrSquareWidth}
-              dragActivationThreshold={200}
-              onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
-              onDragStart={() => console.log("Some block is being dragged now!")}>
-              {
-                this.state.data.map(({ target, platform, handle }, index) => {
-                  return (
-                    <QRBlock
-                      inactive={true}
-                      key={index}
-                      target={target}
-                      platform={platform}
-                      handle={handle}
-                      qrSquareWidth={qrSquareWidth}
-                    />
-                  )
-                })
-              }
-            </SortableGrid>
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView>
+            <View style={{ paddingBottom: 25, paddingTop: 10 }}>
+              <SortableGrid
+                blockTransitionDuration={400}
+                activeBlockCenteringDuration={200}
+                itemHeight={qrSquareWidth + 90}
+                itemWidth={qrSquareWidth}
+                dragActivationThreshold={200}
+                onDragRelease={(itemOrder) => console.log("Drag was released, the blocks are in the following order: ", itemOrder)}
+                onDragStart={() => console.log("Some block is being dragged now!")}
+              >
+                {
+                  this.state.data.map(({ target, platform, handle }, index) => {
+                    return (
+                      <QRBlock
+                        inactive={true}
+                        key={index}
+                        target={target}
+                        platform={platform}
+                        handle={handle}
+                        qrSquareWidth={qrSquareWidth}
+                      />
+                    )
+                  })
+                }
+              </SortableGrid>
+            </View>
           </ScrollView>
+          <TouchableNativeFeedback onPress={this.openMilesPage}>
+            <View style={{ padding: 10 }}>
+              <Text
+                style={[{ color: Colors.white, alignSelf: "center", fontSize: 20 }, Quicksand.regular]}
+              >Made in 🇨🇦 by Miles Au
+            </Text>
+            </View>
+          </TouchableNativeFeedback>
         </SafeAreaView>
-      </View>
+      </View >
     )
   }
 }

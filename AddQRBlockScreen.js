@@ -20,7 +20,7 @@ class AddQRBlockScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ submitPlatform: this.submitPlatform });
+    this.props.navigation.setParams({ submitQRCode: this.submitQRCode });
   }
 
   updateSelectedPlatform = (newPlatform) => {
@@ -86,7 +86,7 @@ class AddQRBlockScreen extends React.Component {
     return handle
   }
 
-  submitPlatform = (navigation) => {
+  submitQRCode = (navigation) => {
     var { selectedPlatform, target } = this.state
     if (target == "") {
       Alert.alert(
@@ -167,7 +167,7 @@ class AddQRBlockScreen extends React.Component {
             backgroundColor={Colors.blue}
             color={Colors.white}
             style={{ textAlign: "right" }}
-            onPress={() => params.submitPlatform(navigation)}
+            onPress={() => params.submitQRCode(navigation)}
           ></Icon.Button>
         </View>
       ),
