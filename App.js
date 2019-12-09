@@ -3,6 +3,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './HomeScreen'
 import AddQRBlockScreen from './AddQRBlockScreen'
+import ShuffleListScreen from './ShuffleListScreen'
 
 const MainNavigator = createStackNavigator(
   {
@@ -11,11 +12,14 @@ const MainNavigator = createStackNavigator(
     },
     AddQRBlock: {
       screen: AddQRBlockScreen,
-    }
+    },
+    ShuffleList: {
+      screen: ShuffleListScreen,
+    },
   },
   {
     initialRouteName: "Home",
-    headerLayoutPreset: 'center'
+    headerLayoutPreset: 'center',
   }
 );
 
